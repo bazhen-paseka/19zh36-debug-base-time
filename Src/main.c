@@ -51,7 +51,10 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+  volatile uint32_t tim_k1;
+  volatile uint32_t tim_k2;
+  volatile uint8_t ch1;
+  volatile uint8_t ch2;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,12 +113,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  // start strobe impulse
+	  HAL_GPIO_WritePin(START_STROB_GPIO_Port, START_STROB_Pin, SET);
+	  //HAL_Delay(1);
+	  for (int w=0; w<10; w++)
+	  	  { __asm("nop");}
+	  HAL_GPIO_WritePin(START_STROB_GPIO_Port, START_STROB_Pin, RESET);
+	  //HAL_GPIO_TogglePin(START_STROB_GPIO_Port, START_STROB_Pin);
 
-	HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-	HAL_Delay(1000);
-	sprintf(DataChar,"uptime:%d\r\n", uptime_i32);
+	  //HAL_Delay(1);
+	  ch1 = 0;
+	  ch2 = 0;
+	  TIM4->CNT = 0;
+	  HAL_TIM_Base_Start(&htim4);
+	  HAL_Delay(500);
+	  HAL_TIM_Base_Stop(&htim4);
+
+	  HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+	sprintf(DataChar,"%d) %d(%d) %d(%d)\r\n", uptime_i32, (int)tim_k1, (int)ch1, (int)tim_k2, (int)ch2);
 	uptime_i32++;
 	HAL_UART_Transmit(&huart1, (uint8_t *)DataChar, strlen(DataChar), 100);
+
 
   /* USER CODE END WHILE */
 
