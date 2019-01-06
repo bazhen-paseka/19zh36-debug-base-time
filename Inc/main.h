@@ -49,8 +49,8 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define START_STROB_Pin GPIO_PIN_0
-#define START_STROB_GPIO_Port GPIOA
+#define START_STROB_Pin GPIO_PIN_15
+#define START_STROB_GPIO_Port GPIOC
 #define LED_GREEN_Pin GPIO_PIN_1
 #define LED_GREEN_GPIO_Port GPIOA
 #define K1_Pin GPIO_PIN_2
