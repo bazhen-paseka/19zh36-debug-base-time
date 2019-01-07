@@ -106,10 +106,10 @@ int main(void)
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  int uptime_i32 = 0;
+
   char DataChar[100];
 
-	sprintf(DataChar,"\r\n\r\nUART1 for debug Start\r\nSpeed 38400\r\n");
+	sprintf(DataChar,"\r\n19ZH36 GROZA-T55 debug base time\r\nUART1 for debug started\r\nSpeed 38400\r\n");
 	HAL_UART_Transmit(&huart1, (uint8_t *)DataChar, strlen(DataChar), 100);
 
   /* USER CODE END 2 */
@@ -118,15 +118,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // start strobe impulse
 	  HAL_GPIO_WritePin(START_STROB_GPIO_Port, START_STROB_Pin, SET);
-	  //HAL_Delay(1);
 	  for (int w=0; w<10; w++)
 	  	  { __asm("nop");}
 	  HAL_GPIO_WritePin(START_STROB_GPIO_Port, START_STROB_Pin, RESET);
-	  //HAL_GPIO_TogglePin(START_STROB_GPIO_Port, START_STROB_Pin);
 
-	  //HAL_Delay(1);
 	  ch1 = 0;
 	  ch2 = 0;
 	  TIM4->CNT = 0;
@@ -135,8 +131,8 @@ int main(void)
 	  HAL_TIM_Base_Stop(&htim4);
 
 	  HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-	sprintf(DataChar,"%d) %d(%d) %d(%d) %d\r\n", uptime_i32, (int)tim_k1, (int)ch1, (int)tim_k2, (int)ch2, (int)(tim_k1-tim_k2) );
-	uptime_i32++;
+	sprintf(DataChar,"K1 %d(%d) K2 %d(%d) delta %d mSec\r\n", (int)tim_k1, (int)ch1, (int)tim_k2, (int)ch2, (int)(tim_k1-tim_k2) );
+
 	HAL_UART_Transmit(&huart1, (uint8_t *)DataChar, strlen(DataChar), 100);
 
 
